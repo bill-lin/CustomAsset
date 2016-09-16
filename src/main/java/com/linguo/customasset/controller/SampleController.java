@@ -22,5 +22,6 @@ public class SampleController {
         return new Greeting(counter.incrementAndGet(),
                 String.format(template, name));
     }
+
 }
 
