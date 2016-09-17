@@ -32,10 +32,18 @@ public class CustomAsset {
     private String searchName;
 
     @Field(SEARCH_COUNT)
-    private int searchCount;
+    private int searchCount = 1;
 
     @Field("S3_Id")
     private String s3Id;
+
+    public CustomAsset() {
+    }
+
+    public CustomAsset(String searchName, String fileKey) {
+        this.searchName = searchName;
+        this.s3Id = fileKey;
+    }
 
     public String getId() {
         return id;

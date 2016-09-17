@@ -1,7 +1,6 @@
 package com.linguo.customasset.controller;
 
 import com.linguo.customasset.exception.ImageSearchException;
-import com.linguo.customasset.model.CustomAsset;
 import com.linguo.customasset.model.CustomAssetView;
 import com.linguo.customasset.service.CustomAssetSearchFacade;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +22,8 @@ public class CustomAssetController {
     @Autowired
     private CustomAssetSearchFacade customAssetSearchFacade;
 
-    @RequestMapping(path = "/asset/search", method = RequestMethod.GET )
-    public CustomAsset searchImages(@RequestParam(value = "query") String query) throws ImageSearchException {
+    @RequestMapping(path = "/asset/search", method = RequestMethod.GET, produces="image/png" )
+    public byte[] searchImages(@RequestParam(value = "query") String query) throws ImageSearchException {
         try {
             return customAssetSearchFacade.search(query);
         }

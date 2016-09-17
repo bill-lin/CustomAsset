@@ -1,6 +1,7 @@
 buildscript {
 	ext {
 		springBootVersion = '1.4.0.RELEASE'
+		springCloudVersion = '1.0.2.RELEASE'
 	}
 	repositories {
 		mavenCentral()
@@ -12,6 +13,7 @@ buildscript {
 
 apply plugin: 'java'
 apply plugin: 'idea'
+apply plugin: 'eclipse'
 apply plugin: 'spring-boot'
 
 jar {
@@ -39,6 +41,7 @@ dependencies {
 	compile group: 'com.google.apis', name: 'google-api-services-customsearch', version: 'v1-rev51-1.22.0'
 	//google api
 	compile group: 'com.google.api-client', name: 'google-api-client', version: '1.22.0'
-	compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.16.10'
+
+	compile("org.springframework.cloud:spring-cloud-aws-context:${springCloudVersion}")
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }

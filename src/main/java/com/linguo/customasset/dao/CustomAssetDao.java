@@ -34,11 +34,7 @@ public class CustomAssetDao {
         return customAsset;
     }
 
-    public CustomAsset save(String searchName, String s3Id){
-        CustomAsset customAsset = new CustomAsset();
-        customAsset.setSearchName(searchName);
-        customAsset.setSearchCount(1);
-        customAsset.setS3Id(s3Id);
+    public CustomAsset save(CustomAsset customAsset){
         return repository.save(customAsset);
 
 
