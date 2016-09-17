@@ -1,3 +1,8 @@
 # CustomAsset
 
-suggested search {keyword} + cartoon + png
+* Prerequisites
+	- java 8
+	- Intellij lombok plugin
+
+* swagger
+	- http://localhost:8081/swagger-ui.html

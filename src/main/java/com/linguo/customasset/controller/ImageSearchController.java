@@ -7,8 +7,11 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.customsearch.Customsearch;
 import com.google.api.services.customsearch.model.Result;
 import com.google.api.services.customsearch.model.Search;
+import com.linguo.customasset.dao.CustomDao;
+import com.linguo.customasset.dao.Customer;
 import com.linguo.customasset.exception.ImageSearchException;
 import net.coobird.thumbnailator.Thumbnails;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,6 +32,9 @@ public class ImageSearchController {
     private String customSearchKey;
     @Value("${customsearch.id}")
     private String customSearchId;
+
+    @Autowired
+    private CustomDao customDao;
 
     @RequestMapping("/search")
     public  List<Result> searchImages(@RequestParam(value="query", defaultValue="World") String query) throws ImageSearchException {
@@ -56,6 +62,12 @@ public class ImageSearchController {
             throw new ImageSearchException(e.getMessage(),e.getCause());
         }
     }
+
+    @RequestMapping("/test")
+    public List<Customer> testMongoDb(@RequestParam(value = "query") String query) throws ImageSearchException {
+          return customDao.testCRUD();
+    }
+
 
     private byte[] getImage(String link) throws IOException {
         ;
