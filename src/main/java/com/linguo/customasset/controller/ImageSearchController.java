@@ -6,6 +6,7 @@ import com.linguo.customasset.exception.ImageSearchException;
 import com.linguo.customasset.service.GoogleImageSearch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,7 +23,7 @@ public class ImageSearchController {
     @Autowired
     private GoogleImageSearch googleImageSearch;
 
-    @RequestMapping("/search")
+    @RequestMapping(path= "/search", method = RequestMethod.GET)
     public  List<Result> searchImages(@RequestParam(value="query", defaultValue="World") String query) throws ImageSearchException {
         try {
             Search results = googleImageSearch.searchImage(query);
@@ -34,7 +35,7 @@ public class ImageSearchController {
         }
     }
 
-    @RequestMapping(value ="/getImage", produces="image/png")
+    @RequestMapping(path ="/getImage", produces="image/png", method = RequestMethod.GET)
     public  byte[] getSingleImage(@RequestParam(value="query") String query) throws ImageSearchException {
         return googleImageSearch.getSingleImage(query);
     }
