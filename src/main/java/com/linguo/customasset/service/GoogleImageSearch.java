@@ -32,7 +32,11 @@ public class GoogleImageSearch {
             Search results = searchImage(searchName);
             List<Result> imageItems = results.getItems();
             for(Result imageItem: imageItems){
-                return getImage(imageItem.getLink());
+                try {
+                    return getImage(imageItem.getLink());
+                }catch (Exception e){
+                    continue;
+                }
             }
             throw new ImageSearchException("no result", null);
         }
