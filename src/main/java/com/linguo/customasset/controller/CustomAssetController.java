@@ -23,9 +23,10 @@ public class CustomAssetController {
     private CustomAssetSearchFacade customAssetSearchFacade;
 
     @RequestMapping(path = "/asset/search", method = RequestMethod.GET, produces="image/png" )
-    public byte[] searchImages(@RequestParam(value = "query") String query) throws ImageSearchException {
+    public byte[] searchImages(@RequestParam(value = "query") String query,
+                               @RequestParam(value = "save", defaultValue = "true") boolean save) throws ImageSearchException {
         try {
-            return customAssetSearchFacade.search(query);
+            return customAssetSearchFacade.search(query,save);
         }
         catch (  IOException e) {
             throw new ImageSearchException(e.getMessage(),e.getCause());

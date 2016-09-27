@@ -85,9 +85,12 @@ public class AwsS3Dao {
 
         S3ObjectInputStream objectInputStream = s3Object.getObjectContent();
 
-        byte[] bytes = IOUtils.toByteArray(objectInputStream);
-
-        return bytes;
+        try {
+            byte[] bytes = IOUtils.toByteArray(objectInputStream);
+            return bytes;
+        }finally {
+            objectInputStream.close();
+        }
     }
 
     public void delete(String key) throws IOException {

@@ -30,17 +30,29 @@ public class CustomAssetSearchFacade {
     @Autowired
     private CustomAssetViewConverter customAssetViewConverter;
 
-    public byte[]  search(String searchName) throws IOException, ImageSearchException {
+    public byte[]  search(String searchName, boolean saveToDB) throws IOException, ImageSearchException {
         searchName = searchName.toLowerCase();
-        CustomAsset customAsset = customAssetDao.searchByName(searchName);
+        if(saveToDB) {
+            CustomAsset customAsset = customAssetDao.searchByName(searchName);
 
-        if(customAsset !=null && customAsset.getS3Id() !=null){
-            return awsS3Dao.download(customAsset.getS3Id());
+            if (customAsset != null && customAsset.getS3Id() != null) {
+                try {
+                    return awsS3Dao.download(customAsset.getS3Id());
+                } catch (Exception e) {
+                    return searchAndSave(searchName, customAsset);
+                }
+            } else {
+                return searchAndSave(searchName, customAsset);
+            }
         }else{
-            byte[] image = googleImageSearch.getSingleImage(searchName);
-            uploadAndSave(searchName, customAsset, image);
-            return image;
+            return googleImageSearch.getSingleImage(searchName);
         }
+    }
+
+    private byte[] searchAndSave(String searchName, CustomAsset customAsset) throws ImageSearchException {
+        byte[] image = googleImageSearch.getSingleImage(searchName);
+        uploadAndSave(searchName, customAsset, image);
+        return image;
     }
 
     private void uploadAndSave(String searchName, CustomAsset customAsset, byte[] image) {
