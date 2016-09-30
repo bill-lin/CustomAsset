@@ -15,6 +15,8 @@ public class CustomAssetView {
 
     private String s3Id;
 
+    private String url;
+
     public String getName() {
         return name;
     }
@@ -53,5 +55,13 @@ public class CustomAssetView {
 
     public void setS3Id(String s3Id) {
         this.s3Id = s3Id;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

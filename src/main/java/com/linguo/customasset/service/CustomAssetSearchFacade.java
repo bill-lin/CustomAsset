@@ -63,7 +63,17 @@ public class CustomAssetSearchFacade {
         customAssetDao.save(customAsset);
     }
 
-    public Page<CustomAssetView> list(Pageable pageable) {
-        return customAssetDao.list(pageable).map(customAssetViewConverter);
+    public Page<CustomAssetView> list(Pageable pageable, String localName, int localPort) {
+        Page<CustomAssetView> customAssetViews = customAssetDao.list(pageable).map(customAssetViewConverter);
+        for(CustomAssetView customAssetView : customAssetViews.getContent()){
+            if(customAssetView.getS3Id()!=null) {
+                customAssetView.setUrl("http://" + localName + ":"+localPort+ "/asset/" + customAssetView.getS3Id());
+            }
+        }
+        return customAssetViews;
+    }
+
+    public byte[] view(String s3Id) throws IOException {
+        return awsS3Dao.download(s3Id);
     }
 }
