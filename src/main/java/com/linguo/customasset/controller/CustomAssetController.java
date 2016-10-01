@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 /**
@@ -46,7 +45,7 @@ public class CustomAssetController {
     }
 
     @RequestMapping(path = "/asset", method = RequestMethod.GET)
-    public Page<CustomAssetView> listCustomAssets(Pageable pageable,HttpServletRequest request) {
-            return customAssetSearchFacade.list(pageable, request.getLocalName(), request.getLocalPort());
+    public Page<CustomAssetView> listCustomAssets(Pageable pageable) {
+            return customAssetSearchFacade.list(pageable);
     }
 }

@@ -7,6 +7,7 @@ import com.linguo.customasset.exception.ImageSearchException;
 import com.linguo.customasset.model.CustomAsset;
 import com.linguo.customasset.model.CustomAssetView;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,9 @@ public class CustomAssetSearchFacade {
 
     @Autowired
     private CustomAssetViewConverter customAssetViewConverter;
+
+    @Value("${image.server}")
+    private String imageServerUrl;
 
     public byte[]  search(String searchName, boolean saveToDB) throws IOException, ImageSearchException {
         searchName = searchName.toLowerCase();
@@ -63,11 +67,11 @@ public class CustomAssetSearchFacade {
         customAssetDao.save(customAsset);
     }
 
-    public Page<CustomAssetView> list(Pageable pageable, String localName, int localPort) {
+    public Page<CustomAssetView> list(Pageable pageable) {
         Page<CustomAssetView> customAssetViews = customAssetDao.list(pageable).map(customAssetViewConverter);
         for(CustomAssetView customAssetView : customAssetViews.getContent()){
             if(customAssetView.getS3Id()!=null) {
-                customAssetView.setUrl("http://" + localName + ":"+localPort+ "/asset/" + customAssetView.getS3Id());
+                customAssetView.setUrl(imageServerUrl+ "/asset/" + customAssetView.getS3Id());
             }
         }
         return customAssetViews;
