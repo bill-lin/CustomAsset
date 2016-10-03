@@ -16,16 +16,10 @@ import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -40,17 +34,17 @@ public class AwsS3Dao {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    private PutObjectResult upload(String filePath, String uploadKey) throws FileNotFoundException {
-        return upload(new FileInputStream(filePath), uploadKey);
-    }
+
     public String upload(byte[] image, String searchName) {
         String fileKey = searchName.toLowerCase().replace(" ","_")+".png";
-        upload(new ByteArrayInputStream(image), fileKey);
+        upload(new ByteArrayInputStream(image), fileKey, image.length);
         return fileKey;
     }
 
-    private PutObjectResult upload(InputStream inputStream, String uploadKey) {
-        PutObjectRequest putObjectRequest = new PutObjectRequest(bucket, uploadKey, inputStream, new ObjectMetadata());
+    private PutObjectResult upload(InputStream inputStream, String uploadKey, int length) {
+        final ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentLength(length);
+        PutObjectRequest putObjectRequest = new PutObjectRequest(bucket, uploadKey, inputStream, metadata);
 
         putObjectRequest.setCannedAcl(CannedAccessControlList.PublicRead);
 
@@ -62,21 +56,21 @@ public class AwsS3Dao {
         return putObjectResult;
     }
 
-    public List<PutObjectResult> upload(MultipartFile[] multipartFiles) {
-        List<PutObjectResult> putObjectResults = new ArrayList<>();
-
-        Arrays.stream(multipartFiles)
-                .filter(multipartFile -> !StringUtils.isEmpty(multipartFile.getOriginalFilename()))
-                .forEach(multipartFile -> {
-                    try {
-                        putObjectResults.add(upload(multipartFile.getInputStream(), multipartFile.getOriginalFilename()));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                });
-
-        return putObjectResults;
-    }
+//    public List<PutObjectResult> upload(MultipartFile[] multipartFiles) {
+//        List<PutObjectResult> putObjectResults = new ArrayList<>();
+//
+//        Arrays.stream(multipartFiles)
+//                .filter(multipartFile -> !StringUtils.isEmpty(multipartFile.getOriginalFilename()))
+//                .forEach(multipartFile -> {
+//                    try {
+//                        putObjectResults.add(upload(multipartFile.getInputStream(), multipartFile.getOriginalFilename(), image.length));
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                });
+//
+//        return putObjectResults;
+//    }
 
     public byte[] download(String key) throws IOException {
         GetObjectRequest getObjectRequest = new GetObjectRequest(bucket, key);
